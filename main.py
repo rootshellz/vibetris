@@ -49,6 +49,7 @@ key_timers = {"left": 0, "right": 0, "down": 0}
 block_counts = {"I": 0, "O": 0, "T": 0, "S": 0, "Z": 0, "J": 0, "L": 0}
 total_blocks = 0
 lines_per_cycle = 10
+tetris_multiplier = 10
 
 
 def draw_grid():
@@ -166,7 +167,7 @@ def merge_piece_to_grid():
 
 
 def clear_lines():
-    global grid, score, total_lines_cleared
+    global grid, score, total_lines_cleared, tetris_multiplier
     lines_cleared = 0
     y = GRID_HEIGHT - 1
     while y >= 0:
@@ -179,12 +180,16 @@ def clear_lines():
     total_lines_cleared += lines_cleared
     if lines_cleared == 1:
         score += 100
+        tetris_multiplier = 1
     elif lines_cleared == 2:
-        score += 400
+        score += 100 * 2 * 2
+        tetris_multiplier = 1
     elif lines_cleared == 3:
-        score += 900
+        score += 100 * 3 * 3
+        tetris_multiplier = 1
     elif lines_cleared == 4:
-        score += 2000
+        score += 100 * 4 * 5 * tetris_multiplier
+        tetris_multiplier += 1
     return lines_cleared
 
 
@@ -215,7 +220,7 @@ def draw_current_piece():
 
 
 def main():
-    global current_piece, next_piece, game_over, fall_time, score, lock_timer, fall_speed
+    global current_piece, next_piece, game_over, fall_time, score, lock_timer, fall_speed, tetris_multiplier
 
     # Synthesize event-based 8-bit chiptune style sound effects
     import array
@@ -246,7 +251,7 @@ def main():
     score_100_points_sound = generate_square_wave(
         659.25, 0.1, amplitude=0.5
     )  # E5, slightly longer
-    score_600_points_sound = generate_square_wave(
+    score_tetris_sound = generate_square_wave(
         783.99, 0.2, amplitude=0.6
     )  # G5, triumphant longer note
     # Negative sound for game over
@@ -418,7 +423,8 @@ def main():
                                 score_100_points_sound.play()
                                 pygame.time.wait(100)
                             if lines_cleared == 4:
-                                score_600_points_sound.play()
+                                for i in range(tetris_multiplier):
+                                    score_tetris_sound.play()
 
                             # Change song every lines_per_cycle lines
                             if (
