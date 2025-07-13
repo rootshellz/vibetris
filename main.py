@@ -48,6 +48,7 @@ key_states = {"left": False, "right": False, "down": False}
 key_timers = {"left": 0, "right": 0, "down": 0}
 block_counts = {"I": 0, "O": 0, "T": 0, "S": 0, "Z": 0, "J": 0, "L": 0}
 total_blocks = 0
+lines_per_cycle = 10
 
 
 def draw_grid():
@@ -214,7 +215,7 @@ def draw_current_piece():
 
 
 def main():
-    global current_piece, next_piece, game_over, fall_time, score, lock_timer
+    global current_piece, next_piece, game_over, fall_time, score, lock_timer, fall_speed
 
     # Synthesize event-based 8-bit chiptune style sound effects
     import array
@@ -419,16 +420,18 @@ def main():
                             if lines_cleared == 4:
                                 score_600_points_sound.play()
 
-                            # Change song every 20 lines
+                            # Change song every lines_per_cycle lines
                             if (
-                                total_lines_cleared // 20
-                                > (total_lines_cleared - lines_cleared) // 20
+                                total_lines_cleared // lines_per_cycle
+                                > (total_lines_cleared - lines_cleared)
+                                // lines_per_cycle
                             ):
                                 bg_melody = generate_melody(
                                     random.choice(["C", "F", "G"])
                                 )
                                 current_bg_note = 0
                                 play_next_bg_note()
+                                fall_speed -= 2.5  # Increase falling speed by 5ms every lines_per_cycle lines
                         current_piece = next_piece
                         next_piece = spawn_piece()
                         if current_piece.collides(grid):
