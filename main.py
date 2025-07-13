@@ -308,7 +308,6 @@ def main():
             game_over = True
 
     game_over_time = 0
-    game_over_display_duration = 3000  # 3 seconds in milliseconds
 
     while True:
         if not game_over:
@@ -512,14 +511,16 @@ def main():
             screen.blit(game_over_text, text_rect)
             pygame.display.flip()
 
-            # Check if it's time to close the game
-            current_time = pygame.time.get_ticks()
-            if current_time - game_over_time >= game_over_display_duration:
-                break
-
+            exit_game = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    break
+                    exit_game = True
+                elif event.type == pygame.KEYDOWN:
+                    if event.key in (pygame.K_RETURN, pygame.K_ESCAPE, pygame.K_SPACE):
+                        exit_game = True
+
+            if exit_game:
+                break
 
             clock.tick(60)
 
