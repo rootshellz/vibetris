@@ -49,7 +49,7 @@ key_timers = {"left": 0, "right": 0, "down": 0}
 block_counts = {"I": 0, "O": 0, "T": 0, "S": 0, "Z": 0, "J": 0, "L": 0}
 total_blocks = 0
 lines_per_cycle = 10
-tetris_multiplier = 10
+tetris_multiplier = 1
 
 
 def draw_grid():
