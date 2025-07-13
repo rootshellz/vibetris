@@ -419,6 +419,17 @@ def main():
                                 pygame.time.wait(100)
                             if lines_cleared == 4:
                                 score_600_points_sound.play()
+
+                            # Change song every 20 lines
+                            if (
+                                total_lines_cleared // 20
+                                > (total_lines_cleared - lines_cleared) // 20
+                            ):
+                                bg_melody = generate_melody(
+                                    random.choice(["C", "F", "G"])
+                                )
+                                current_bg_note = 0
+                                play_next_bg_note()
                         current_piece = next_piece
                         next_piece = spawn_piece()
                         if current_piece.collides(grid):
